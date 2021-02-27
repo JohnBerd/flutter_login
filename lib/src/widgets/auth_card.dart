@@ -25,6 +25,8 @@ class AuthCard extends StatefulWidget {
     this.padding = const EdgeInsets.all(0),
     this.loadingController,
     this.emailValidator,
+    this.firstnameValidator,
+    this.lastnameValidator,
     this.passwordValidator,
     this.onSubmit,
     this.onSubmitCompleted,
@@ -33,6 +35,8 @@ class AuthCard extends StatefulWidget {
   final EdgeInsets padding;
   final AnimationController loadingController;
   final FormFieldValidator<String> emailValidator;
+  final FormFieldValidator<String> firstnameValidator;
+  final FormFieldValidator<String> lastnameValidator;
   final FormFieldValidator<String> passwordValidator;
   final Function onSubmit;
   final Function onSubmitCompleted;
@@ -287,6 +291,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                         ? _formLoadingController
                         : (_formLoadingController..value = 1.0),
                     emailValidator: widget.emailValidator,
+                    firstnameValidator: widget.firstnameValidator,
+                    lastnameValidator: widget.lastnameValidator,
                     passwordValidator: widget.passwordValidator,
                     onSwitchRecoveryPassword: () => _switchRecovery(true),
                     onSubmitCompleted: () {
@@ -330,6 +336,8 @@ class _LoginCard extends StatefulWidget {
     Key key,
     this.loadingController,
     @required this.emailValidator,
+    @required this.firstnameValidator,
+    @required this.lastnameValidator,
     @required this.passwordValidator,
     @required this.onSwitchRecoveryPassword,
     this.onSwitchAuth,
@@ -338,6 +346,8 @@ class _LoginCard extends StatefulWidget {
 
   final AnimationController loadingController;
   final FormFieldValidator<String> emailValidator;
+  final FormFieldValidator<String> firstnameValidator;
+  final FormFieldValidator<String> lastnameValidator;
   final FormFieldValidator<String> passwordValidator;
   final Function onSwitchRecoveryPassword;
   final Function onSwitchAuth;
@@ -354,6 +364,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   final _confirmPasswordFocusNode = FocusNode();
 
   TextEditingController _nameController;
+  TextEditingController _firstnameController;
+  TextEditingController _lastnameController;
   TextEditingController _passController;
   TextEditingController _confirmPassController;
 
@@ -380,6 +392,8 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
     final auth = Provider.of<Auth>(context, listen: false);
     _nameController = TextEditingController(text: auth.email);
+    _nameController = TextEditingController(text: auth.firstname);
+    _nameController = TextEditingController(text: auth.lastname);
     _passController = TextEditingController(text: auth.password);
     _confirmPassController = TextEditingController(text: auth.confirmPassword);
 
@@ -516,6 +530,41 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       onSaved: (value) => auth.email = value,
     );
   }
+  Widget _buildFirstnameField(double width, LoginMessages messages, Auth auth) {
+    return AnimatedTextFormField(
+      controller: _firstnameController,
+      width: width,
+      loadingController: _loadingController,
+      interval: _nameTextFieldLoadingAnimationInterval,
+      labelText: messages.firstNameHint,
+      prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      validator: widget.firstnameValidator,
+      onSaved: (value) => auth.email = value,
+    );
+  }
+
+  Widget _buildLastnameField(double width, LoginMessages messages, Auth auth) {
+    return AnimatedTextFormField(
+      controller: _lastnameController,
+      width: width,
+      loadingController: _loadingController,
+      interval: _nameTextFieldLoadingAnimationInterval,
+      labelText: messages.lastNameHint,
+      prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      validator: widget.lastnameValidator,
+      onSaved: (value) => auth.email = value,
+    );
+  }
 
   Widget _buildPasswordField(double width, LoginMessages messages, Auth auth) {
     return AnimatedPasswordTextFormField(
@@ -641,8 +690,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _buildNameField(textFieldWidth, messages, auth),
-                SizedBox(height: 20),
-                _buildPasswordField(textFieldWidth, messages, auth),
                 SizedBox(height: 10),
               ],
             ),
@@ -661,7 +708,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               vertical: 10,
             ),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
-            child: _buildConfirmPasswordField(textFieldWidth, messages, auth),
+            child: _buildFirstnameField(textFieldWidth, messages, auth),
           ),
           ExpandableContainer(
             backgroundColor: theme.accentColor,
@@ -677,7 +724,22 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
               vertical: 10,
             ),
             onExpandCompleted: () => _postSwitchAuthController.forward(),
-            child: _buildConfirmPasswordField(textFieldWidth, messages, auth),
+            child: _buildLastnameField(textFieldWidth, messages, auth),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              left: cardPadding,
+              right: cardPadding,
+              top: cardPadding + 10,
+            ),
+            width: cardWidth,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildPasswordField(textFieldWidth, messages, auth),
+                SizedBox(height: 10),
+              ],
+            ),
           ),
           ExpandableContainer(
             backgroundColor: theme.accentColor,

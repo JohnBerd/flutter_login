@@ -213,6 +213,8 @@ class FlutterLogin extends StatefulWidget {
     this.messages,
     this.theme,
     this.emailValidator,
+    this.firstnameValidator,
+    this.lastnameValidator,
     this.passwordValidator,
     this.onSubmitAnimationCompleted,
     this.logoTag,
@@ -247,6 +249,8 @@ class FlutterLogin extends StatefulWidget {
   /// Email validating logic, Returns an error string to display if the input is
   /// invalid, or null otherwise
   final FormFieldValidator<String> emailValidator;
+  final FormFieldValidator<String> firstnameValidator;
+  final FormFieldValidator<String> lastnameValidator;
 
   /// Same as [emailValidator] but for password
   final FormFieldValidator<String> passwordValidator;
@@ -272,6 +276,20 @@ class FlutterLogin extends StatefulWidget {
   static final FormFieldValidator<String> defaultEmailValidator = (value) {
     if (value.isEmpty || !Regex.email.hasMatch(value)) {
       return 'Invalid email!';
+    }
+    return null;
+  };
+
+static final FormFieldValidator<String> defaultFirstnameValidator = (value) {
+    if (value.isEmpty || value.length <= 2) {
+      return 'Firstname is too short!';
+    }
+    return null;
+  };
+
+  static final FormFieldValidator<String> defaultLastnameValidator = (value) {
+    if (value.isEmpty || value.length <= 2) {
+      return 'Lastname is too short!';
     }
     return null;
   };
@@ -538,6 +556,10 @@ class _FlutterLoginState extends State<FlutterLogin>
     final headerHeight = cardTopPosition - headerMargin;
     final emailValidator =
         widget.emailValidator ?? FlutterLogin.defaultEmailValidator;
+    final firstnameValidator =
+        widget.firstnameValidator ?? FlutterLogin.defaultFirstnameValidator;
+    final lastnameValidator =
+        widget.lastnameValidator ?? FlutterLogin.defaultLastnameValidator;
     final passwordValidator =
         widget.passwordValidator ?? FlutterLogin.defaultPasswordValidator;
 
@@ -578,6 +600,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         padding: EdgeInsets.only(top: cardTopPosition),
                         loadingController: _loadingController,
                         emailValidator: emailValidator,
+                        firstnameValidator: firstnameValidator,
+                        lastnameValidator: lastnameValidator,
                         passwordValidator: passwordValidator,
                         onSubmit: _reverseHeaderAnimation,
                         onSubmitCompleted: widget.onSubmitAnimationCompleted,

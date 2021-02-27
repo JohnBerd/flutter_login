@@ -140,6 +140,18 @@ class LoginScreen extends StatelessWidget {
         }
         return null;
       },
+      firstnameValidator: (value) {
+        if (value.isEmpty) {
+          return 'Firstname is empty';
+        }
+        return null;
+      },
+      emailValidator: (value) {
+        if (value.isEmpty) {
+          return 'Lastname is empty';
+        }
+        return null;
+      },
       passwordValidator: (value) {
         if (value.isEmpty) {
           return 'Password is empty';

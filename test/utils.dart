@@ -13,6 +13,8 @@ class LoginCallback {
   Future<String> onSignup(LoginData data) => null;
   Future<String> onRecoverPassword(String data) => null;
   String emailValidator(String value) => null;
+  String firstnameValidator(String value) => null;
+  String lastnameValidator(String value) => null;
   String passwordValidator(String value) => null;
   void onSubmitAnimationCompleted() {}
 }
