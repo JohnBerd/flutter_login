@@ -281,16 +281,10 @@ class FlutterLogin extends StatefulWidget {
   };
 
 static final FormFieldValidator<String> defaultFirstnameValidator = (value) {
-    if (value.isEmpty || value.length <= 2) {
-      return 'Firstname is too short!';
-    }
     return null;
   };
 
   static final FormFieldValidator<String> defaultLastnameValidator = (value) {
-    if (value.isEmpty || value.length <= 2) {
-      return 'Lastname is too short!';
-    }
     return null;
   };
 
