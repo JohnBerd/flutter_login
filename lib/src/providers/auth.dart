@@ -58,7 +58,7 @@ class Auth with ChangeNotifier {
   String _firstname = '';
   get firstname => _firstname;
   set firstname(String firstname) {
-    _email = firstname;
+    _firstname = firstname;
     notifyListeners();
   }
 
